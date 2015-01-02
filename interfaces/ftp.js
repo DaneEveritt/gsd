@@ -67,7 +67,8 @@ try {
 	process.exit()
 }
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', function (error) {
+    log.error('Uncaught Exception Error', error);
 	return;
 });
 
@@ -79,7 +80,6 @@ server.on('client:connected', function(conn) {
 	var username;
 	var serverId;
 	var fullUsername;
-
 	conn.on('command:user', function(user, success, failure) {
 		if (user.indexOf("-") == -1){
 			failure()
@@ -89,10 +89,12 @@ server.on('client:connected', function(conn) {
 		split = user.rsplit("-",1);
 		username = split[0];
 		serverId =  split[1];
+        log.verbose(username + ' is attempting to log into server ' + serverId);
 
 		try {
 			serverId = parseInt(serverId);
 		}catch(ex){
+            log.error('Server ID does not seem to be a number', ex);
 			failure();
 		}
 
