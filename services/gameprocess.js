@@ -402,67 +402,13 @@ GameServer.prototype.unzipfile = function unzipfile(style, file) {
 
 };
 
-GameServer.prototype.deleteFileFolder = function(path,cb){
-	fs.stat(path, function(err, stats) {
-		if(err) {
-			cb(err,stats);
-			return;
-		}
-		if(stats.isFile()) {
-			log.debug("Removing file: " + path);
-			fs.unlink(path, function(err) {
-				if(err) {
-					cb("Error deleing file: " + err,null);
-				} else {
-					cb(null,true);
-				}
-				return;
-			});
-		} else if(stats.isDirectory()) {
-			fs.readdir(path, function(err, files) {
-				if(err){
-					cb("Error reading directory: " + err,null);
-					return;
-				}
-				f_length = files.length;
-				log.debug(f_length + " files has been found in directory: " + path);
-				f_delete_index = 0;
-
-
-				checkStatus = function() {
-					if(f_length===f_delete_index) {
-						log.debug("Removing directory: " + path);
-						fs.rmdir(path, function(err) {
-							if(err) {
-								cb("Error deleing folder: " + err,null);
-							} else { 
-								log.debug("Directory removed");
-								cb(null,true);
-							}
-						});
-						return true;
-					}
-					return false;
-				};
-				if(!checkStatus()) {
-					for(var i=0;i<f_length;i++) {
-						(function() {
-							filePath = pathlib.join(path, '/' + files[i]);
-							GameServer.prototype.deleteFileFolder(filePath,function deleteFileFolderCB(err,status){
-								if(!err) {
-									f_delete_index ++;
-									checkStatus();
-									return;
-								} else {
-									cb(err,null);
-									return;
-								}
-							});
-
-						})();
-					}
-				}
-			});
+GameServer.prototype.deleteFileFolder = function(path,callback){
+	exec("rm -rf " + path, function(err,stdout,stderr) {
+		if(err === null) {
+			log.debug("File Deleted");
+		} else {
+			log.debug("Error deleting file: " + err);
+			return err;
 		}
 	});
 };

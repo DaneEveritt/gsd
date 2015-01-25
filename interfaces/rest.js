@@ -347,7 +347,14 @@ restserver.del(/^\/gameservers\/(\d+)\/file\/(.+)/, function command(req, res, n
 	service = servers[req.params[0]];
 	log.debug("Reqest to delete file " + req.params[1] + " from server " + service.config.name);
 	path = pathlib.join(service.config.path, "/" + req.params[1]);
-	service.deleteFileFolder(path, function(err){if(!err){log.error("Error deleting file: " + err); res.send(err);} else {log.debug(path + " deleted!");res.send("ok");}})
+	service.deleteFileFolder(path, function(err) {
+		if(err !== null) {
+			log.error("Error deleting file: " + err);
+			res.send(err);
+			return;
+		}
+	});
+	res.send('ok');
 });
 	
 restserver.get('/gameservers/:id/gamemodes', function command(req, res, next){
