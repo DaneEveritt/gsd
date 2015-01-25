@@ -68,7 +68,7 @@ try {
 }
 
 process.on('uncaughtException', function (error) {
-    log.error('Uncaught Exception Error', error);
+    log.error('Uncaught Exception Error: ' + error);
 	return;
 });
 

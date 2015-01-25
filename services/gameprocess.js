@@ -23,7 +23,6 @@ var log = require('../log.js');
 
 var OFF = 0; ON = 1; STARTING = 2; STOPPING = 3; CHANGING_GAMEMODE = 4;
 
-
 function GameServer(config) {
 	this.status = OFF;
 	this.config = config;
@@ -148,13 +147,13 @@ GameServer.prototype.turnon = function(callback) {
 
 	this.ps.on('data', function(data){
 		output = data.toString();
+//		log.debug(self.config.name + " data: " + output);
 		self.emit("console", output);
 		if (self.status == STARTING){
 			if (output.indexOf(self.plugin.eula_trigger) !=-1){
 				log.warn("Server " + self.config.name + " needs to accept EULA");
 				self.setStatus(OFF);
 				self.emit('off');
-				self.emit('crash');
 			}
 			if (output.indexOf(self.plugin.started_trigger) !=-1){
 
@@ -187,8 +186,9 @@ GameServer.prototype.turnon = function(callback) {
 	});
 
 	this.on('crash', function(){
-		log.warn("Restarting server after crash for "+ self.config.user +" ("+ self.config.name +")");
 		if (self.status != ON){
+			log.warn("Restarting server after crash for "+ self.config.user +" ("+ self.config.name +")");
+			log.debug("Server " + self.config.name + " status: " + self.status)
 			self.restart();
 		}
 	});
@@ -402,8 +402,69 @@ GameServer.prototype.unzipfile = function unzipfile(style, file) {
 
 };
 
-GameServer.prototype.deletefile = function Console(){
-	//TODO : Remove?
+GameServer.prototype.deleteFileFolder = function(path,cb){
+	fs.stat(path, function(err, stats) {
+		if(err) {
+			cb(err,stats);
+			return;
+		}
+		if(stats.isFile()) {
+			log.debug("Removing file: " + path);
+			fs.unlink(path, function(err) {
+				if(err) {
+					cb("Error deleing file: " + err,null);
+				} else {
+					cb(null,true);
+				}
+				return;
+			});
+		} else if(stats.isDirectory()) {
+			fs.readdir(path, function(err, files) {
+				if(err){
+					cb("Error reading directory: " + err,null);
+					return;
+				}
+				f_length = files.length;
+				log.debug(f_length + " files has been found in directory: " + path);
+				f_delete_index = 0;
+
+
+				checkStatus = function() {
+					if(f_length===f_delete_index) {
+						log.debug("Removing directory: " + path);
+						fs.rmdir(path, function(err) {
+							if(err) {
+								cb("Error deleing folder: " + err,null);
+							} else { 
+								log.debug("Directory removed");
+								cb(null,true);
+							}
+						});
+						return true;
+					}
+					return false;
+				};
+				if(!checkStatus()) {
+					for(var i=0;i<f_length;i++) {
+						(function() {
+							filePath = pathlib.join(path, '/' + files[i]);
+							GameServer.prototype.deleteFileFolder(filePath,function deleteFileFolderCB(err,status){
+								if(!err) {
+									f_delete_index ++;
+									checkStatus();
+									return;
+								} else {
+									cb(err,null);
+									return;
+								}
+							});
+
+						})();
+					}
+				}
+			});
+		}
+	});
 };
 
 GameServer.prototype.plugincategories = function(callback){
@@ -451,4 +512,5 @@ GameServer.prototype.installgamemode = function installgamemode(){
 GameServer.prototype.removegamemode = function Console(){
 	self.ps = spawn(self.exe, [self.config.path], {cwd: self.config.path});
 };
+
 module.exports = GameServer;

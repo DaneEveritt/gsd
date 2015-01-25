@@ -341,6 +341,15 @@ restserver.put(/^\/gameservers\/(\d+)\/file\/(.+)/, function(req, res, next) {
 	}
 });
 
+restserver.del(/^\/gameservers\/(\d+)\/file\/(.+)/, function command(req, res, next){
+	//TODO: UNCOMMENT WHEN DELETION IS WORKING!
+	//if(!restauth(req, req.params[0], "gamemodes:delete")){res = unauthorized(res); return next();}
+	service = servers[req.params[0]];
+	log.debug("Reqest to delete file " + req.params[1] + " from server " + service.config.name);
+	path = pathlib.join(service.config.path, "/" + req.params[1]);
+	service.deleteFileFolder(path, function(err){if(!err){log.error("Error deleting file: " + err); res.send(err);} else {log.debug(path + " deleted!");res.send("ok");}})
+});
+	
 restserver.get('/gameservers/:id/gamemodes', function command(req, res, next){
 	if (!restauth(req, req.params.id, "gamemodes:get")){res = unauthorized(res); return next();}
 	service = servers[req.params.id];
@@ -353,6 +362,7 @@ restserver.put('/gameservers/:id/gamemodes', function command(req, res, next){
 	service.installgamemode(req.params['gamemode']);
 	res.send("ok");
 });
+
 restserver.del('/gameservers/:id/gamemodes', function command(req, res, next){
 	if (!restauth(req, req.params.id, "gamemodes:edit")){res = unauthorized(res); return next();}
 	service = servers[req.params.id];
