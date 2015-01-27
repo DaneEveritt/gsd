@@ -384,7 +384,11 @@ GameServer.prototype.zipfile = function zipfile(file) {
 	path = pathlib.join(this.config.path, pathlib.normalize(file));
 	loc = pathlib.join(this.config.path, pathlib.normalize(file + "-" + dayTime + ".tar.gz"));
 	log.debug("Compressing file: " + file + " to " + file + "-" + dayTime + ".tar.gz");
-	exec("tar -zcvf " + loc + " " + path);
+	exec("tar -cvzf " + loc + " -C " + path + " .", function(err) {
+		if(err !== null) {
+			log.error("Error compressing folder!" + err);
+		}
+	});
 
 };
 
@@ -399,12 +403,11 @@ GameServer.prototype.unzipfile = function unzipfile(style, file) {
 	}else if(style == ".gz") {
 
 		decompress = new targz().extract(path, path.slice(0,-7), function(err){
-			if(err)
-				console.log(err);
+			if(err) {
+				log.error("Error extracting Tar file!", err);
+			}
 		});
-
 	}
-
 };
 
 GameServer.prototype.deleteFileFolder = function(path,callback){
@@ -412,7 +415,7 @@ GameServer.prototype.deleteFileFolder = function(path,callback){
 		if(err === null) {
 			log.debug("File Deleted");
 		} else {
-			log.debug("Error deleting file: " + err);
+			log.debug("Error deleting file!", err);
 			return err;
 		}
 	});
