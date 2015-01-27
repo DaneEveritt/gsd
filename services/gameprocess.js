@@ -21,6 +21,8 @@ var targz = require('tar.gz');
 var unzip = require('unzip');
 var log = require('../log.js');
 
+var date = new Date();
+
 var OFF = 0; ON = 1; STARTING = 2; STOPPING = 3; CHANGING_GAMEMODE = 4;
 
 function GameServer(config) {
@@ -376,10 +378,13 @@ GameServer.prototype.downloadfile = function downloadfile(url, path) {
 };
 
 GameServer.prototype.zipfile = function zipfile(file) {
-
+	day = date.toDateString().replace(/ /g, "-");
+	time = date.toLocaleTimeString().replace(/:/g, "-");
+	dayTime = day + "-" + time;
 	path = pathlib.join(this.config.path, pathlib.normalize(file));
-	loc = pathlib.join(this.config.path, pathlib.normalize(file+".tar.gz"));
-	compress = new targz().compress(path, loc, function(err) {if(err) console.log(err); } );
+	loc = pathlib.join(this.config.path, pathlib.normalize(file + "-" + dayTime + ".tar.gz"));
+	log.debug("Compressing file: " + file + " to " + file + "-" + dayTime + ".tar.gz");
+	exec("tar -zcvf " + loc + " " + path);
 
 };
 
