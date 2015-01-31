@@ -386,7 +386,7 @@ GameServer.prototype.zipfile = function zipfile(file) {
 	log.debug("Compressing file: " + file + " to " + file + "-" + dayTime + ".tar.gz");
 	exec("tar -cvzf " + loc + " -C " + path + " .", function(err) {
 		if(err !== null) {
-			log.error("Error compressing folder!" + err);
+			log.error("Error compressing folder!", err);
 		}
 	});
 
@@ -402,11 +402,17 @@ GameServer.prototype.unzipfile = function unzipfile(style, file) {
 
 	}else if(style == ".gz") {
 
-		decompress = new targz().extract(path, path.slice(0,-7), function(err){
-			if(err) {
-				log.error("Error extracting Tar file!", err);
+		exec("tar -xvzf " + path + " -C " + path.slice(0,-7), function(err) {
+			if(err !== null) {
+				log.error("Error decompressing tar.gz file!", err);
 			}
 		});
+		
+//		decompress = new targz().extract(path, path.slice(0,-7), function(err){
+//			if(err) {
+//				log.error("Error extracting Tar file!", err);
+//			}
+//		});
 	}
 };
 
