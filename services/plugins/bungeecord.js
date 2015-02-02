@@ -9,8 +9,9 @@ var log = require('../../log.js');
 var settings = {};
 settings.name = "Bungeecord"
 settings.stop_command = 'end'
-settings.started_trigger = '[INFO] Listening on'
-settings.defaultvariables = {"-Xmx":"256M", "-jar":"BungeeCord.jar"}
+settings.started_trigger = ')! For help, type "help" or "?"'
+settings.eula_trigger = 'Go to eula.txt for more info.'
+settings.defaultvariables = {"-Xmx":"256M", "-jar":"BungeeCord.jar","nogui":""}
 settings.exe = "java",
 settings.joined = ["-Xmx", "-XX:PermSize=", "-Djline.terminal="];
 

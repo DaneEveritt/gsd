@@ -123,7 +123,7 @@ GameServer.prototype.turnon = function(callback) {
 	this.pid = this.ps.pid;
 
 	this.setStatus(STARTING);
-	log.verbose("Starting server for "+ self.config.user +" ("+ self.config.name +")");
+	log.verbose("Starting server for "+ self.config.user +" ("+ self.config.name +") using plugin "+ self.config.plugin);
 
 	try {
 
