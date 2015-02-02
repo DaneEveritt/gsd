@@ -80,14 +80,9 @@ restserver.put('/gameservers/config', function info(req, res, next){
 
 restserver.post('/gameservers/', function info(req, res, next){
 	if (!restauth(req, -1, "g:new")){res = unauthorized(res); return next();}
-	id = config.servers.push(JSON.parse(req.params['settings']));
-	// As push returns the array length, not the id
-	id = id - 1;
-	saveconfig(config);
-	initServer(id);
-	service = servers[id];
-	service.create();
-	res.send({"id":String(id)});
+	settings = JSON.parse(req.params['settings']);
+	saveconfig(settings.name,settings);
+	res.send("ok");
 });
 
 restserver.del('/gameservers/:id', function info(req, res, next){

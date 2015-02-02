@@ -49,8 +49,8 @@ function merge(joinedCliCommands) {
 	return output;
 }
 
-function saveconfig(config){
-	fs.writeFile("config.json", JSON.stringify(config, null, 4), function(err) {
+function saveconfig(server, config){
+	fs.writeFile("./servers/"+server+".json", JSON.stringify(config, null, 4), function(err) {
 	if(err) {
 		log.error("Could not save config!", err);
 	} else {
