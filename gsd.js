@@ -1,3 +1,25 @@
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database(':gsd:');
+
+db.serialize(function() {
+  db.run("CREATE TABLE IF NOT EXISTS servers (id INT PRIMARY KEY ASC NOT NULL,"
+		 + "name TEXT NOT NULL,"
+		 + "user TEXT NOR NULL," 
+		 + "overide_command_line TEXT," 
+		 + "path TEXT NOT NULL," 
+		 + "intall_dir TEXT NOT NULL," 
+		 + "disk_hard INT NOT NULL,"
+		 + "disk_soft INT NOT NULL,"
+		 + "cpu INT NOT NULL,"
+		 + "variables TEXT NOT NULL,"
+		 + "keys TEXT NOT NULL,"
+		 + "gameport INT NOT NULL,"
+		 + "gamehost TEXT NOT NULL,"
+		 + "plugin TEXT NOT NULL,"
+		 + "auto_on BOOL NOT NULL"
+		 + ")");
+});
+
 var config = require('./config.json');
 
 require('./interfaces/console.js');

@@ -1,6 +1,8 @@
 var restify = require('restify');
 var exec = require('child_process').exec;
 var log = require('./log.js');
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database(':gsd:');
 
 
 function executeCommand(command, callback){
@@ -56,6 +58,23 @@ function saveconfig(server, config){
 	} else {
 		log.verbose("JSON saved to " + outputFilename);
 	}
+	});
+}
+
+function saveServerSettings(server, settings) {
+	db.serialize(function() {
+		var	s = db.prepare("INSERT INTO servers VALUES ("
+						   + settings.name
+						   + settings.user
+						   + settings.overide_command_line
+						   + settings.path
+						   + settings.build.install_dir
+						   + settings.build.disk.hard
+						   + settings.build.disk.soft
+						   + settings.build.cpu
+						   + variables
+						   + keys
+						   + ")");
 	});
 }
 

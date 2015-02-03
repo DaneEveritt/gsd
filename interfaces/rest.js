@@ -81,7 +81,8 @@ restserver.put('/gameservers/config', function info(req, res, next){
 restserver.post('/gameservers/', function info(req, res, next){
 	if (!restauth(req, -1, "g:new")){res = unauthorized(res); return next();}
 	settings = JSON.parse(req.params['settings']);
-	saveconfig(settings.name,settings);
+//	saveconfig(settings.name,settings);
+	saveServerSettings(settings.name, settings);
 	res.send("ok");
 });
 
