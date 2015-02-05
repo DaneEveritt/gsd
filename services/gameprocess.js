@@ -411,7 +411,7 @@ GameServer.prototype.unzipfile = function unzipfile(style, file) {
 };
 
 GameServer.prototype.deleteFileFolder = function(path,callback){
-	exec("rm -rf " + path, function(err,stdout,stderr) {
+	exec("rm -rf \"" + path + "\"", function(err,stdout,stderr) {
 		if(err === null) {
 			log.debug("File Deleted");
 		} else {
