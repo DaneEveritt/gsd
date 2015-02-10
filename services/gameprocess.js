@@ -226,6 +226,7 @@ GameServer.prototype.kill = function(){
 	var self = this;
 	clearTimeout(self.queryCheck);
 	if (!self.status == OFF){
+		log.warn("Server has been killed by user. ("+ self.config.name +")");
 		self.setStatus(STOPPING);
 		self.ps.kill();
 		self.setStatus(OFF);
