@@ -20,6 +20,7 @@ var userid = require('userid');
 var targz = require('tar.gz');
 var unzip = require('unzip');
 var log = require('../log.js');
+var querystring = require('querystring');
 
 var date = new Date();
 
@@ -411,7 +412,7 @@ GameServer.prototype.unzipfile = function unzipfile(style, file) {
 };
 
 GameServer.prototype.deleteFileFolder = function(path,callback){
-	exec("rm -rf \"" + path + "\"", function(err,stdout,stderr) {
+	exec("rm -rf \"" + querystring.unescape(path) + "\"", function(err,stdout,stderr) {
 		if(err === null) {
 			log.debug("File Deleted");
 		} else {
