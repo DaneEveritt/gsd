@@ -214,7 +214,7 @@ GameServer.prototype.turnoff = function(){
 	clearTimeout(self.queryCheck);
 	if (!self.status == OFF){
 		self.setStatus(STOPPING);
-		self.ps.write(this.settings.stop_command+'\r');
+		self.ps.write(self.settings.stop_command+'\r');
 		self.setStatus(OFF);
 		self.emit('off');
 	}else{
