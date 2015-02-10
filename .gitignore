@@ -2,7 +2,5 @@
 *.key
 node_modules/*
 npm-debug.log
-
 config.json
-
-config.json.bkup
+logs/*
