@@ -336,6 +336,7 @@ restserver.put(/^\/gameservers\/(\d+)\/file\/(.+)/, function(req, res, next) {
 			return next();
 		}
 		service = servers[req.params[0]];
+		var path = require('path');
 		ext = path.extname(req.params[1]);
 		res.send(service.unzipfile(ext, req.params[1]));
 	}
@@ -355,7 +356,7 @@ restserver.del(/^\/gameservers\/(\d+)\/file\/(.+)/, function command(req, res, n
 	});
 	res.send('ok');
 });
-	
+
 restserver.get('/gameservers/:id/gamemodes', function command(req, res, next){
 	if (!restauth(req, req.params.id, "gamemodes:get")){res = unauthorized(res); return next();}
 	service = servers[req.params.id];
