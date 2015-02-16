@@ -33,6 +33,7 @@
 		"download" : "",
 		"date-utils": "",
 		"ftpd" : "git://github.com/sstur/nodeftpd.git",
+		"fs-extra": "",
 		"gamedig" : "",
 		"glob" : "",
 		"js-yaml" : "",

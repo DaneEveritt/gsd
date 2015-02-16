@@ -8,6 +8,7 @@ var download = require('download');
 var usage = require('usage');
 var pathlib = require('path');
 var fs = require('fs');
+var fse = require('fs-extra');
 var exec = require('child_process').exec;
 var createUser = require("./create.js").createUser;
 var deleteUser = require("./create.js").deleteUser;
@@ -425,15 +426,16 @@ GameServer.prototype.unzipfile = function unzipfile(style, file) {
 	}
 };
 
-GameServer.prototype.deleteFileFolder = function(path,callback){
-	exec("rm -rf \"" + querystring.unescape(path) + "\"", function(err,stdout,stderr) {
-		if(err === null) {
-			log.debug("File Deleted");
+GameServer.prototype.deleteFileFolder = function(path, callback){
+
+	fse.remove(querystring.unescape(path), function(err) {
+		if(err) {
+			log.error("File located at " + querystring.unescape(path) + " could not be deleted.", err);
 		} else {
-			log.debug("Error deleting file!", err);
-			return err;
+			log.verbose("File located at " + querystring.unescape(path) + " was deleted.");
 		}
 	});
+
 };
 
 GameServer.prototype.plugincategories = function(callback){
