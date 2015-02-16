@@ -120,11 +120,11 @@ server.on('client:connected', function(conn) {
 							failure();
 						}
 					} catch (ex) {
-						log.error("(FTP) Failed to authenticate", ex);
+						log.error("(FTP) Failed to authenticate due to malformed JSON from PufferPanel.", ex.stack);
 						failure();
 					}
 				}else{
-					log.error("(FTP) Failed to authenticate", error);
+					log.error("(FTP) Failed to authenticate " + fullUsername, response);
 					failure();
 				}
 			});
@@ -136,4 +136,8 @@ server.on('client:connected', function(conn) {
 
 });
 
-server.listen(ftpconfig.port);
+try {
+	server.listen(ftpconfig.port);
+} catch {
+	log.error("The selected FTP Port is currently in use and cannot be assigned.");
+}
