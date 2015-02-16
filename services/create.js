@@ -22,9 +22,9 @@ function createUser(username, home, callback){
 }
 
 function deleteUser(username, callback){
-	log.debug("Removing user " + username);
+	log.verbose("Removing user " + username);
 	command = format("deluser --remove-home %s", username);
-	log.debug("User Removed");
+	log.verbose("User Removed");
 	// @TODO: Actually remove the server from config.json...
 	executeCommand(command, callback)
 }
@@ -37,9 +37,9 @@ function linkDir(from_path, to_path, callback){
 
 
 function fixperms(user, path, callback){
-	log.debug("Fixing file permissions");
+	log.verbose("Fixing file permissions");
 	executeCommand("chown -R "+ user +":"+ user +" "+ path, callback);
-	log.debug("Permissions fixed");
+	log.verbose("Permissions fixed");
 };
 
 function replaceFiles(base_folder, files, backing_folder, callback){

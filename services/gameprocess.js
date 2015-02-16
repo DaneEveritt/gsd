@@ -160,7 +160,7 @@ GameServer.prototype.turnon = function(callback) {
 
 	this.ps.on('data', function(data){
 		output = data.toString();
-//		log.debug(self.config.name + " data: " + output);
+//		log.verbose(self.config.name + " data: " + output);
 		self.emit("console", output);
 		if (self.status == STARTING){
 			if (output.indexOf(self.plugin.eula_trigger) !=-1){
@@ -201,7 +201,7 @@ GameServer.prototype.turnon = function(callback) {
 	this.on('crash', function(){
 		if (self.status != ON){
 			log.warn("Restarting server after crash for "+ self.config.user +" ("+ self.config.name +")");
-			log.debug("Server " + self.config.name + " status: " + self.status)
+			log.verbose("Server " + self.config.name + " status: " + self.status)
 			self.restart();
 		}
 	});
@@ -399,7 +399,7 @@ GameServer.prototype.zipfile = function zipfile(file) {
 	dayTime = day + "-" + time;
 	path = pathlib.join(this.config.path, pathlib.normalize(file));
 	loc = pathlib.join(this.config.path, pathlib.normalize(file + "-" + dayTime + ".tar.gz"));
-	log.debug("Compressing file: " + file + " to " + file + "-" + dayTime + ".tar.gz");
+	log.verbose("Compressing file: " + file + " to " + file + "-" + dayTime + ".tar.gz");
 	exec("tar -cvzf " + loc + " -C " + path + " .", function(err) {
 		if(err !== null) {
 			log.error("Error compressing folder!" + err);

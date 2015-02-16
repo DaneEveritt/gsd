@@ -40,7 +40,7 @@ settings.query = function query(self) {
 	},
 	function(res) {
 		if(res.error) {
-			log.debug(self.gamehost + ":" + self.gameport + " query error ", res.error);
+			log.verbose(self.gamehost + ":" + self.gameport + " query error ", res.error);
 	  		self.emit('crash');
 		}else{
 			self.hostname 	= res['name'];
