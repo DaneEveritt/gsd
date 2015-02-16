@@ -120,8 +120,15 @@ GameServer.prototype.turnon = function(callback) {
 		return;
 	}
 
-	this.ps = pty.spawn(this.exe, this.commandline, {cwd: this.config.path, uid: userid.uid(this.config.user), gid: userid.gid(this.config.user)});
-	this.pid = this.ps.pid;
+	try {
+
+		this.ps = pty.spawn(this.exe, this.commandline, {cwd: this.config.path, uid: userid.uid(this.config.user), gid: userid.gid(this.config.user)});
+		this.pid = this.ps.pid;
+
+	} catch(ex) {
+		log.error("Starting server " + self.config.name + " failed due to an exception.", ex.stack);
+		throw Error(ex.message);
+	}
 
 	this.setStatus(STARTING);
 	log.verbose("Starting server for "+ self.config.user +" ("+ self.config.name +") using plugin "+ self.config.plugin);
@@ -143,7 +150,7 @@ GameServer.prototype.turnon = function(callback) {
 		}
 
 	} catch(ex) {
-		log.warn("No CPU Limit defined for server. Running process with unlimited CPU time.", ex);
+		log.warn("No CPU Limit defined for server. Running process with unlimited CPU time.", ex.stack);
 	}
 
 	callback();
