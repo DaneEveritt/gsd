@@ -77,9 +77,9 @@ server.on('error', function (error) {
 });
 
 server.on('client:connected', function(conn) {
-	var username;
-	var serverId;
-	var fullUsername;
+	var username = null;
+	var serverId = null;
+	var fullUsername = null;
 	conn.on('command:user', function(user, success, failure) {
 		if (user.indexOf("-") == -1){
 			failure()
@@ -124,7 +124,8 @@ server.on('client:connected', function(conn) {
 						failure();
 					}
 				}else{
-					log.error("(FTP) Failed to authenticate " + fullUsername, response);
+					console.log(response);
+					log.error("(FTP) Failed to authenticate user.", body);
 					failure();
 				}
 			});
