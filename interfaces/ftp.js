@@ -138,6 +138,6 @@ server.on('client:connected', function(conn) {
 
 try {
 	server.listen(ftpconfig.port);
-} catch {
-	log.error("The selected FTP Port is currently in use and cannot be assigned.");
+} catch(ex) {
+	log.error("The selected FTP Port is currently in use and cannot be assigned.", ex.stack);
 }
