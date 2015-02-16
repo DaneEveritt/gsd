@@ -101,10 +101,12 @@ GameServer.prototype.preflight = function(callback) {
 	log.verbose("Running preflight for " + this.config.user);
 
 	try{
+
 		log.verbose("Fixing Permissions before server boot.");
 		fixperms(this.config.user, this.config.path, function cb(){});
-		log.verbose("Permissions Fixed before server boot.");
 		this.plugin.preflight(this, userid.uid(this.config.user), userid.gid(this.config.user), this.config.path);
+		log.verbose("Permissions Fixed before server boot.");
+
 	} catch(ex) {
 		log.error("Pre-flight for server " + self.config.name +" failed!", ex.stack);
 		throw Error(ex.message);

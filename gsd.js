@@ -1,4 +1,14 @@
 var config = require('./config.json');
+var log = require('./log.js');
+
+log.info("+ ========================================== +");
+log.info("| GSD logs all information, including errors |");
+log.info("| into the logs/ directory. Please check     |");
+log.info("| there before asking for help with bugs.    |");
+log.info("|                                            |");
+log.info("| \x1b[41mSubmit bug reports at the following link:\x1b[0m  |");
+log.info("| https://github.com/PufferPanel/PufferPanel |");
+log.info("+ ========================================== +");
 
 require('./interfaces/console.js');
 var rest = require('./interfaces/rest.js');
@@ -6,7 +16,6 @@ require('./interfaces/ftp.js');
 
 var servers = require('./services');
 var exec = require('child_process').exec;
-var log = require('./log.js');
 
 process.argv.forEach(function(val, index, array) {
 
@@ -25,8 +34,8 @@ process.argv.forEach(function(val, index, array) {
 
 process.on('SIGINT', function() {
 
-	log.info("Detected hard shutdown!");
-	log.info("Killing all running java processes on the server!");
+	log.warn("Detected hard shutdown!");
+	log.warn("Killing all running java processes on the server!");
 
 	try {
 
