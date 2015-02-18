@@ -1,5 +1,16 @@
 var config = require('../config.json');
-var io = require('socket.io').listen(config.daemon.consoleport);
+var fs = require('fs');
+
+var options = {
+	key: fs.readFileSync('https.key'),
+	cert: fs.readFileSync('https.pem')
+};
+
+var app = require('https').createServer(options),
+	io = require('socket.io').listen(app);
+
+app.listen(config.daemon.consoleport);
+
 var hasPermission = require('../auth.js').hasPermission;
 var GameServer = require('../services/gameprocess.js');
 
