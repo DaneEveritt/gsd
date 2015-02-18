@@ -14,24 +14,24 @@ String.prototype.rsplit = function(sep, maxsplit) {
 	return maxsplit ? [ split.slice(0, -maxsplit).join(sep) ].concat(split.slice(-maxsplit)) : split;
 };
 
-if(fs.existsSync('ftps.pem') && fs.existsSync('ftps.key')){
+if(fs.existsSync('https.pem') && fs.existsSync('https.key')){
 
 	try {
-		tlsConfig['key'] = fs.readFileSync('ftps.key')
+		tlsConfig['key'] = fs.readFileSync('https.key')
 	} catch(ex) {
-		log.error('Unable to read ftps.key file', ex);
+		log.error('Unable to read https.key file', ex);
 		process.exit()
 	}
 
 	try {
-		tlsConfig['pem'] = fs.readFileSync('ftps.pem')
+		tlsConfig['pem'] = fs.readFileSync('https.pem')
 	} catch(ex) {
-		log.error('Unable to read ftps.pem file', ex);
+		log.error('Unable to read https.pem file', ex);
 		process.exit()
 	}
 
 }else{
-	log.error(' ** WARNING: Missing ftps.pem and/or ftps.key **');
+	log.error(' ** WARNING: Missing https.pem and/or https.key **');
 	process.exit();
 }
 

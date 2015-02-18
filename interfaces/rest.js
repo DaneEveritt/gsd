@@ -6,12 +6,36 @@ var plugins = require("../services/plugins.js").plugins;
 var saveconfig = require('../utls.js').saveconfig;
 var servers = require('../services/index.js').servers;
 var initServer = require('../services/index.js').initServer;
-var restserver = restify.createServer();
 var path = require('path');
 var async = require('async');
 var mime = require('mime');
 var request = require('request');
 var log = require('../log.js');
+
+if(fs.existsSync('https.pem') && fs.existsSync('https.key')){
+
+	try {
+
+		var restserver = restify.createServer({
+			certificate: fs.readFileSync('https.pem'),
+			key: fs.readFileSync('https.key'),
+			name: 'GSD Instance'
+		});
+
+	} catch(ex) {
+
+		log.error("An exception ccured trying to start the restify server instance.", ex.stack);
+		throw Error(ex.stack);
+
+	}
+
+}else{
+
+	log.error(' ** WARNING: Missing https.pem and/or https.key **');
+	log.error(' ** Vist http://docs.pufferpanel.com/en/latest/installing_nodes for help. **');
+	process.exit();
+
+}
 
 restserver.use(restify.bodyParser());
 restserver.use(restify.authorizationParser());
