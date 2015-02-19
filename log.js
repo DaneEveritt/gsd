@@ -27,6 +27,8 @@ if (!fs.existsSync('logs/')) {
 l.debug = function(l, data) {
 
 	var self = this;
+	var d = new Date();
+	
 	logger.transports.file.level = 'debug';
 	logger.debug(l, { meta: data });
 	if(self.d) {
@@ -39,6 +41,8 @@ l.debug = function(l, data) {
 
 l.error = function(l, data) {
 
+	var d = new Date();
+	
 	logger.error(l, { meta: data });
 	console.error("[" + d.toFormat('HH24:MI:SS') + "]\x1b[1m\x1b[37m\x1b[41m[ERROR]\x1b[0m " + l);
 
@@ -47,6 +51,8 @@ l.error = function(l, data) {
 l.verbose = function(l, data) {
 
 	var self = this;
+	var d = new Date();
+	
 	logger.transports.file.level = 'verbose';
 	logger.verbose(l, { meta: data });
 	if(self.v) {
@@ -56,14 +62,20 @@ l.verbose = function(l, data) {
 };
 
 l.info = function(l, data) {
-
+	
+	var d = new Date();
+	
 	logger.info(l, { meta: data });
 	console.info("[" + d.toFormat('HH24:MI:SS') + "][INFO] " + l);
 
 };
 
 l.warn = function(l, data) {
+	
+	var d = new Date();
+	
 	logger.warn(l, { meta: data });
 	console.info("[" + d.toFormat('HH24:MI:SS') + "]\x1b[30m\x1b[43m[WARN]\x1b[0m " + l);
 };
+
 module.exports = l;
