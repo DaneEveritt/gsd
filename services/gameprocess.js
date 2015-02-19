@@ -171,7 +171,7 @@ GameServer.prototype.turnon = function(callback) {
 			if (output.indexOf(self.plugin.started_trigger) !=-1){
 
 				self.setStatus(ON);
-				self.queryCheck = setInterval(self.query, 2000, self);
+				self.queryCheck = setInterval(self.query, 10000, self);
 				self.statCheck = setInterval(self.procStats, 2000, self);
 				self.usagestats = {};
 				self.querystats = {};
