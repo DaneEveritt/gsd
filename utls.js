@@ -14,6 +14,7 @@ function executeCommand(command, callback){
 }
 
 function mergedicts(){
+
 	var sources = [].slice.call(arguments);
 	var variables = {};
 
@@ -25,6 +26,7 @@ function mergedicts(){
 
 	return variables;
 }
+
 function merge(joinedCliCommands) {
 	var sources = [].slice.call(arguments, 1);
 	var variables = [];

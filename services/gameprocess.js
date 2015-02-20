@@ -32,10 +32,10 @@ function GameServer(config) {
 	this.config = config;
 	this.plugin = plugins[this.config.plugin + '.js'];
 
-	this.variables = utls.mergedicts(this.plugin.defaultvariables, this.config.variables);
+	//this.variables = utls.mergedicts(this.plugin.defaultvariables, this.config.variables);
 	this.keys = this.config.keys;
 	this.build = this.config.build;
-	this.commandline = merge(this.plugin.joined, this.variables);
+	this.commandline = merge(this.plugin.joined, this.config.variables);
 	this.exe = this.plugin.exe;
 
 	if ('gameport' in this.config && this.config.gameport != 0) {
@@ -55,14 +55,17 @@ function GameServer(config) {
 util.inherits(GameServer, events.EventEmitter);
 
 GameServer.prototype.updatevariables = function(variables, replace){
+
 	if (replace == true){
-		this.variables = utls.mergedicts(this.plugin.defaultvariables, variables);
+		this.variables = variables;
 	}else{
-		this.variables = utls.mergedicts(this.plugin.defaultvariables, this.variables, variables);
+		this.variables = utls.mergedicts(this.variables, variables);
 	}
+
 	this.config.variables = this.variables;
 	this.commandline = merge(this.plugin.joined, this.variables);
 	savesettings();
+
 };
 
 GameServer.prototype.updatekeys = function(keys){
@@ -125,6 +128,7 @@ GameServer.prototype.turnon = function(callback) {
 
 	try {
 
+		log.verbose(this.commandline);
 		this.ps = pty.spawn(this.exe, this.commandline, {cwd: this.config.path, uid: userid.uid(this.config.user), gid: userid.gid(this.config.user)});
 		this.pid = this.ps.pid;
 
@@ -318,7 +322,7 @@ GameServer.prototype.addonlist = function(){
 };
 
 GameServer.prototype.info = function(){
-	return {"query":this.querystats, "config":this.config, "status":this.status, "pid":this.pid, "process":this.usagestats, "variables":this.variables}
+	return {"query":this.querystats, "config":this.config, "status":this.status, "pid":this.pid, "process":this.usagestats, "variables":this.config.variables}
 };
 
 

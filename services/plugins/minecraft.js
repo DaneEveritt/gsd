@@ -1,4 +1,3 @@
-mcping = require('mcquery');
 fs = require('fs');
 pathlib = require('path');
 glob = require('glob');
@@ -9,24 +8,20 @@ var async = require('async');
 var trim = require("trim");
 var Gamedig = require('gamedig');
 var settings = {};
-var bukget = require('bukget')({
-	url: 'api.bukget.org/',
-	version: 3,
-	https: false,
-	rejectUnauthorizedSSL: false,
-	userAgent: 'GameTainers-GSD',
-	localAddress : false,
-	pluginServer: 'bukkit'
-});
 
 settings.name = "Minecraft"
 settings.stop_command = 'stop'
 settings.started_trigger = ')! For help, type "help" or "?"'
 settings.eula_trigger = 'Go to eula.txt for more info.'
-settings.defaultvariables = {"-Djline.terminal=":"jline.UnsupportedTerminal", "-Xmx":"512M", "-jar":"minecraft_server.jar"}
 settings.exe = "java",
 settings.defaultPort = 25565;
-settings.joined = ["-Xmx", "-XX:PermSize=", "-Djline.terminal="];
+settings.joined = [
+	"-Xms",
+	"-Xmx",
+	"-XX:PermSize=",
+	"-Djline.terminal=",
+	"-XX:ConcGCThreads="
+];
 settings.log = "/logs/latest.log"
 
 settings.query = function query(self) {
@@ -41,7 +36,7 @@ settings.query = function query(self) {
 	function(res) {
 		if(res.error) {
 			log.verbose(self.gamehost + ":" + self.gameport + " query error ", res.error);
-	  		self.emit('crash');
+			self.emit('crash');
 		}else{
 			self.hostname 	= res['name'];
 			self.numplayers = res['players'].length;
@@ -54,15 +49,6 @@ settings.query = function query(self) {
 			self.lastquerytime = new Date().getTime();
 		}
 	});
-};
-
-settings.commands = {
-	'player':{
-	'kick':'kick {{player}}',
-	'ban':'ban {{player}}',
-	'kill':'kill {{player}}',
-	'clearinventory':'clearinventory {{player}}'
-	}
 };
 
 settings.preflight = function(server, user, group, path){
@@ -225,35 +211,6 @@ settings.addonlist = function addonlist(self){
 	}
 
 	return addons;
-};
-
-settings.pluginsGetCategories = function plugincategories(self, callback){
-	bukget.listPluginsCategories(function(err, results){
-		results.forEach(function(entry) {
-			entry.id = entry.name;
-		});
-
-		callback(err, results)
-	});
-};
-
-settings.pluginsByCategory = function pluginsByCategory(self, category, size, start, callback){
-	bukget.pluginsByCategories(category, {size:size, start:start, fields:"description,plugin_name,logo,server,website,versions.game_versions,versions.version,authors,versions.download"}, function(err, results){
-		callback(err, results);
-	});
-};
-
-settings.pluginsSearch = function pluginsSearch(self, name, size, start, callback){
-	bukget.basicSearch({
-		field: 'plugin_name',
-		action: 'like',
-		value: name,
-		size: size,
-		start:start,
-		fields:"description,plugin_name,logo,server,website,versions.game_versions,versions.version,authors,versions.download"
-	}, function(err, results){
-		callback(err, results);
-	});
 };
 
 module.exports = settings;
